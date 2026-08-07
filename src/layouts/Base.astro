@@ -1,0 +1,98 @@
+---
+import '../styles/global.css';
+import { altPath, t, type Lang } from '../i18n/ui';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t(lang);
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const alternate = new URL(altPath[lang], Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{copy.meta.title}</title>
+    <meta name="description" content={copy.meta.description} />
+    <meta name="theme-color" content="#020617" />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang} href={canonical} />
+    <link rel="alternate" hreflang={lang === 'es' ? 'en' : 'es'} href={alternate} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Roamly" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta property="og:title" content={copy.meta.title} />
+    <meta property="og:description" content={copy.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Arms the reveal styles only when JS can also disarm them, so the page
+         stays fully readable if this script never runs. -->
+    <script is:inline>
+      document.documentElement.dataset.js = '';
+    </script>
+  </head>
+
+  <body class="min-h-screen">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-teal-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-950"
+    >
+      {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+    </a>
+
+    <Nav lang={lang} />
+    <main id="main"><slot /></main>
+    <Footer lang={lang} />
+
+    <script>
+      const revealables = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+      if (!('IntersectionObserver' in window)) {
+        revealables.forEach((el) => el.setAttribute('data-visible', ''));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.setAttribute('data-visible', '');
+              observer.unobserve(entry.target);
+            }
+          },
+          // Fire slightly before the element reaches the fold so the motion is
+          // finishing, not starting, by the time it is comfortably in view.
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.05 },
+        );
+        revealables.forEach((el) => observer.observe(el));
+      }
+
+      // Header hairline appears only once content has scrolled under it.
+      const header = document.querySelector('[data-header]');
+      if (header) {
+        const sentinel = document.createElement('div');
+        sentinel.setAttribute('aria-hidden', 'true');
+        sentinel.style.cssText = 'position:absolute;top:0;height:1px;width:1px;';
+        document.body.prepend(sentinel);
+
+        new IntersectionObserver(
+          ([entry]) => header.toggleAttribute('data-scrolled', !entry.isIntersecting),
+          { threshold: 0 },
+        ).observe(sentinel);
+      }
+    </script>
+  </body>
+</html>

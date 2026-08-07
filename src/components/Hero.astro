@@ -1,0 +1,226 @@
+---
+import { t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t(lang).hero;
+const mock = t(lang).mock;
+---
+
+<section class="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
+  <!-- One soft light source behind the headline. Not a gradient wash. -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[900px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-teal-500/10 blur-[120px]"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-6">
+    <div class="mx-auto max-w-3xl text-center">
+      <p
+        data-reveal
+        class="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-400"
+      >
+        <span class="relative flex h-1.5 w-1.5">
+          <span
+            data-motion="pin"
+            class="absolute inline-flex h-full w-full animate-pulse-pin rounded-full bg-teal-400"
+          ></span>
+          <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal-400"></span>
+        </span>
+        {copy.eyebrow}
+      </p>
+
+      <!-- Large type reads too loose at default tracking, so it tightens as it
+           grows; leading drops to match. -->
+      <h1
+        data-reveal
+        style="--reveal-delay: 60ms"
+        class="mt-6 text-[2.6rem] font-semibold leading-[1.03] tracking-[-0.03em] sm:text-6xl"
+      >
+        {copy.title}
+      </h1>
+
+      <p
+        data-reveal
+        style="--reveal-delay: 120ms"
+        class="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-slate-400"
+      >
+        {copy.subtitle}
+      </p>
+
+      <div
+        data-reveal
+        style="--reveal-delay: 180ms"
+        class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+      >
+        <a href="#pricing" class="btn-primary w-full sm:w-auto">{copy.primary}</a>
+        <a href="#how" class="btn-secondary w-full sm:w-auto">
+          {copy.secondary}
+          <svg viewBox="0 0 16 16" class="h-3.5 w-3.5" fill="none" aria-hidden="true">
+            <path
+              d="M6 3.5 10.5 8 6 12.5"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </a>
+      </div>
+
+      <p data-reveal style="--reveal-delay: 220ms" class="mt-4 text-xs text-slate-500">
+        {copy.note}
+      </p>
+    </div>
+
+    <!-- Product shot: the map and the itinerary in one frame, which is the
+         whole pitch. -->
+    <figure data-reveal style="--reveal-delay: 280ms" class="relative mx-auto mt-16 max-w-4xl">
+      <div
+        class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-[0_40px_80px_-32px_rgb(2_6_23)]"
+      >
+        <div class="flex items-center gap-2 border-b border-slate-800/80 bg-slate-900/80 px-4 py-3">
+          <span class="h-2.5 w-2.5 rounded-full bg-slate-700"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-slate-700"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-slate-700"></span>
+          <span class="ml-3 text-xs text-slate-500">{mock.day}</span>
+        </div>
+
+        <!-- Taller on phones so the itinerary panel doesn't sit on top of the
+             route; the map crops rather than letterboxes. -->
+        <div class="relative aspect-[4/3] w-full bg-slate-950 sm:aspect-[16/10]">
+          <svg
+            viewBox="0 0 720 460"
+            preserveAspectRatio="xMidYMid slice"
+            class="absolute inset-0 h-full w-full"
+            role="img"
+            aria-label={mock.alt}
+          >
+            <rect width="720" height="460" class="fill-slate-950"></rect>
+
+            <!-- Blocks -->
+            <g class="fill-slate-900/80">
+              <rect x="40" y="60" width="150" height="90" rx="6"></rect>
+              <rect x="215" y="60" width="120" height="130" rx="6"></rect>
+              <rect x="360" y="40" width="180" height="110" rx="6"></rect>
+              <rect x="565" y="60" width="115" height="90" rx="6"></rect>
+              <rect x="40" y="180" width="150" height="120" rx="6"></rect>
+              <rect x="360" y="180" width="110" height="120" rx="6"></rect>
+              <rect x="495" y="180" width="185" height="90" rx="6"></rect>
+              <rect x="215" y="330" width="160" height="90" rx="6"></rect>
+              <rect x="400" y="345" width="140" height="75" rx="6"></rect>
+            </g>
+
+            <!-- Green space -->
+            <rect
+              x="215"
+              y="215"
+              width="120"
+              height="90"
+              rx="6"
+              class="fill-emerald-500/10 stroke-emerald-500/20"
+              stroke-width="1"></rect>
+
+            <!-- River -->
+            <path
+              d="M-10 415C90 400 150 452 260 448 380 444 470 470 560 452 630 438 690 448 730 432v60H-10z"
+              class="fill-sky-500/10"></path>
+            <path
+              d="M-10 415C90 400 150 452 260 448 380 444 470 470 560 452 630 438 690 448 730 432"
+              fill="none"
+              class="stroke-sky-500/25"
+              stroke-width="1.5"></path>
+
+            <!-- Streets -->
+            <g class="stroke-slate-800" stroke-width="1.5" fill="none" stroke-linecap="round">
+              <path d="M0 165h720M0 315h720M200 0v400M345 0v420M480 0v400M550 0v390"></path>
+              <path d="M40 0 200 165M680 200 540 340" opacity="0.6"></path>
+            </g>
+
+            <!-- Route. Slow, decorative drift that reads as "this is a path",
+                 killed entirely under reduced motion. -->
+            <path
+              d="M150 340C205 322 245 285 300 252 355 219 405 288 452 296 512 306 528 200 566 152"
+              fill="none"
+              class="stroke-teal-500/25"
+              stroke-width="9"
+              stroke-linecap="round"></path>
+            <path
+              data-motion="route"
+              d="M150 340C205 322 245 285 300 252 355 219 405 288 452 296 512 306 528 200 566 152"
+              fill="none"
+              class="animate-route stroke-teal-400"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-dasharray="10 8"></path>
+
+            <!-- Stops -->
+            <g>
+              <circle cx="150" cy="340" r="13" class="fill-slate-950 stroke-teal-400" stroke-width="2.5"
+              ></circle>
+              <text x="150" y="345" text-anchor="middle" class="fill-teal-300" font-size="13" font-weight="600"
+                >1</text
+              >
+
+              <circle cx="300" cy="252" r="13" class="fill-slate-950 stroke-teal-400" stroke-width="2.5"
+              ></circle>
+              <text x="300" y="257" text-anchor="middle" class="fill-teal-300" font-size="13" font-weight="600"
+                >2</text
+              >
+
+              <circle cx="452" cy="296" r="13" class="fill-slate-950 stroke-teal-400" stroke-width="2.5"
+              ></circle>
+              <text x="452" y="301" text-anchor="middle" class="fill-teal-300" font-size="13" font-weight="600"
+                >3</text
+              >
+
+              <!-- Current stop carries the amber accent, used once. -->
+              <circle data-motion="pin" cx="566" cy="152" r="22" class="animate-pulse-pin fill-amber-400/30"
+              ></circle>
+              <circle cx="566" cy="152" r="13" class="fill-amber-400"></circle>
+              <text x="566" y="157" text-anchor="middle" class="fill-slate-950" font-size="13" font-weight="700"
+                >4</text
+              >
+            </g>
+          </svg>
+
+          <!-- Itinerary panel: a translucent layer floating over the map, not
+               an opaque strip cut out of it. -->
+          <div
+            class="absolute left-3 top-3 w-[12.5rem] rounded-2xl border border-white/10 bg-slate-900/70 p-3 shadow-2xl backdrop-blur-xl sm:left-6 sm:top-6 sm:w-[15rem] sm:p-3.5"
+          >
+            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              {mock.day}
+            </p>
+            <ul class="mt-2.5 space-y-2.5">
+              {
+                mock.stops.map((stop, i) => (
+                  <li class="flex items-start gap-2.5">
+                    <span class="mt-px w-9 shrink-0 text-[11px] tabular-nums text-slate-500">
+                      {stop.time}
+                    </span>
+                    <span class="flex items-start gap-2 text-[13px] leading-snug text-slate-200">
+                      <span
+                        class={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${i === 2 ? 'bg-amber-400' : 'bg-teal-400'}`}
+                      />
+                      {stop.name}
+                    </span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div
+            class="absolute bottom-4 right-4 rounded-full border border-white/10 bg-slate-900/70 px-3 py-1.5 text-xs text-slate-300 backdrop-blur-xl sm:bottom-6 sm:right-6"
+          >
+            {mock.badge}
+          </div>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>

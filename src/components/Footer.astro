@@ -1,0 +1,82 @@
+---
+import { altPath, languages, t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t(lang).footer;
+const nav = t(lang).nav;
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-slate-900 py-14">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div>
+        <a href={lang === 'es' ? '/' : '/en/'} class="press flex items-center gap-2.5" aria-label="Roamly">
+          <svg viewBox="0 0 28 28" class="h-7 w-7" aria-hidden="true">
+            <rect width="28" height="28" rx="8" class="fill-teal-500/15 stroke-teal-500/40" stroke-width="1"
+            ></rect>
+            <path
+              d="M8 19.5c0-4 3-4.5 6-4.5s5-1 5-3.5S16.5 8 14.5 9"
+              fill="none"
+              class="stroke-teal-400"
+              stroke-width="1.75"
+              stroke-linecap="round"></path>
+            <circle cx="8" cy="19.5" r="2" class="fill-teal-400"></circle>
+            <circle cx="19.6" cy="9.4" r="2" class="fill-amber-400"></circle>
+          </svg>
+          <span class="text-[15px] font-semibold tracking-tight text-slate-50">Roamly</span>
+        </a>
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-slate-500">{copy.tagline}</p>
+
+        <a
+          href={altPath[lang]}
+          hreflang={other}
+          class="press mt-5 inline-flex items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-xs text-slate-400 transition-colors duration-150 ease-out hover:border-slate-700 hover:text-slate-100"
+        >
+          <svg viewBox="0 0 16 16" class="h-3.5 w-3.5" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"></circle>
+            <path
+              d="M2 8h12M8 2c1.8 2 1.8 10 0 12M8 2C6.2 4 6.2 12 8 14"
+              stroke="currentColor"
+              stroke-width="1.3"></path>
+          </svg>
+          <span class="sr-only">{nav.langLabel}: </span>{languages[other]}
+        </a>
+      </div>
+
+      {
+        copy.columns.map((column) => (
+          <div>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              {column.title}
+            </h2>
+            <ul class="mt-4 space-y-2.5">
+              {column.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-sm text-slate-500 transition-colors duration-150 ease-out hover:text-slate-200"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-2 border-t border-slate-900 pt-6 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} Roamly. {copy.rights}</p>
+      <p>{copy.credit}</p>
+    </div>
+  </div>
+</footer>

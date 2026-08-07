@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Features from '../components/Features.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Pricing from '../components/Pricing.astro';
+
+const lang = 'es' as const;
+---
+
+<Base lang={lang}>
+  <Hero lang={lang} />
+  <Features lang={lang} />
+  <HowItWorks lang={lang} />
+  <Pricing lang={lang} />
+</Base>

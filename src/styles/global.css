@@ -1,0 +1,143 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/opsz.css";
+
+/* ---------------------------------------------------------------------------
+   Design tokens. Dark-only surface built on slate-950, teal-500 as the single
+   action colour, amber-500 reserved for discovery/highlight moments.
+   --------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Stronger than the stock CSS keywords, which are too weak to read as
+     intentional. Enter/exit uses out; on-screen movement uses in-out. */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Surfaces, hand-tuned between slate-950 and slate-900 so cards separate
+     from the page without turning grey. */
+  --color-surface: oklch(0.203 0.021 258);
+  --color-surface-raised: oklch(0.238 0.023 258);
+  --color-hairline: oklch(0.32 0.02 258 / 0.7);
+
+  --animate-route: route-dash 24s linear infinite;
+  --animate-pulse-pin: pulse-pin 2.6s var(--ease-in-out-strong) infinite;
+
+  @keyframes route-dash {
+    to { stroke-dashoffset: -400; }
+  }
+  @keyframes pulse-pin {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50%      { opacity: 0;    transform: scale(2.1); }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    /* Sticky header height + breathing room for anchor jumps. */
+    scroll-padding-top: 6rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-slate-950 text-slate-300 antialiased;
+    font-optical-sizing: auto;
+  }
+
+  /* Tracking is size-specific: large type reads too loose, small type too
+     tight. Headings tighten as they grow. */
+  h1, h2, h3 {
+    @apply text-slate-50;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-teal-400;
+  }
+
+  ::selection {
+    @apply bg-teal-500/30 text-slate-50;
+  }
+}
+
+/* Press feedback belongs on pointer-down, so :active — not a hover-only
+   affordance. Subtle scale, fast enough to read as "heard you". */
+@utility press {
+  transition: transform 160ms var(--ease-out-strong);
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+@utility btn-primary {
+  @apply press inline-flex items-center justify-center gap-2 rounded-full
+         bg-teal-500 px-5 py-2.5 text-sm font-semibold text-slate-950;
+  /* Bright top edge reads as light catching a raised surface; the wide
+     teal-tinted shadow keeps it from floating on a flat void. */
+  box-shadow:
+    inset 0 1px 0 0 var(--color-teal-300),
+    0 8px 24px -12px var(--color-teal-500);
+}
+
+@utility btn-secondary {
+  @apply press inline-flex items-center justify-center gap-2 rounded-full
+         border border-slate-700/80 bg-slate-900/60 px-5 py-2.5 text-sm
+         font-semibold text-slate-100;
+}
+
+@utility card {
+  @apply rounded-2xl border border-slate-800/80 bg-slate-900/40 p-6;
+  transition:
+    transform 200ms var(--ease-out-strong),
+    border-color 200ms ease,
+    background-color 200ms ease;
+}
+
+@layer utilities {
+  /* Scroll reveal. Only armed once JS confirms it can un-arm it, so the page
+     is fully readable with scripting off. */
+  html[data-js] [data-reveal]:not([data-visible]) {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  [data-reveal] {
+    transition:
+      opacity 500ms var(--ease-out-strong) var(--reveal-delay, 0ms),
+      transform 500ms var(--ease-out-strong) var(--reveal-delay, 0ms);
+  }
+}
+
+/* Hover is a lie on touch screens — a tap fires it. Gate every hover-only
+   motion behind a real pointer. */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background-color: var(--color-teal-400); }
+  .btn-secondary:hover { border-color: var(--color-slate-600); background-color: var(--color-slate-800); }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-slate-700);
+    background-color: color-mix(in oklab, var(--color-slate-900) 70%, transparent);
+  }
+}
+
+/* Reduced motion means gentler, not absent: keep the fades that explain what
+   appeared, drop everything that travels. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  html[data-js] [data-reveal]:not([data-visible]) {
+    transform: none;
+  }
+  [data-reveal] {
+    transition: opacity 200ms ease;
+  }
+  .press:active { transform: none; }
+  .card-hover:hover { transform: none; }
+
+  [data-motion="route"],
+  [data-motion="pin"] {
+    animation: none !important;
+  }
+}
